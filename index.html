@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hidden King: Player Companion</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@500;700&family=Cormorant+Garamond:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e4d4b0;--pa:#f7edd3;--pb:#ead9ae;--ink:#2b1d14;--gold:#8f600e;--red:#7a1420;--line:#8b6a3a;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#150f14;--pa:#2e2221;--pb:#241a1c;--ink:#f0e2c4;--gold:#d9a94a;--red:#e0584a;--line:#6b5130}}
+:root[data-theme="dark"]{--bg:#150f14;--pa:#2e2221;--pb:#241a1c;--ink:#f0e2c4;--gold:#d9a94a;--red:#e0584a;--line:#6b5130}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);font:500 20px/1.5 'Cormorant Garamond',Georgia,serif;background:radial-gradient(ellipse at 50% 0,rgba(217,169,74,.2),transparent 65%),repeating-linear-gradient(45deg,rgba(0,0,0,.05) 0 2px,transparent 2px 7px),var(--bg);min-height:100vh}
+body::before{content:'👑';position:fixed;left:-4vw;bottom:-2vh;font-size:30vh;opacity:.08;pointer-events:none;transform:rotate(-10deg)}
+body::after{content:'🃏';position:fixed;right:-4vw;top:2vh;font-size:30vh;opacity:.08;pointer-events:none;transform:rotate(12deg)}
+.wm{position:fixed;inset:0;margin:auto;width:min(120vw,720px);height:min(120vw,720px);opacity:.07;pointer-events:none}
+#app{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:12px 16px 24px}
+h1,h2,h3,.lb,.btn,.go,.dock small,.pc small,.chp{font-family:'Cinzel',Georgia,serif}
+h1{font:700 38px/1.1 'Cinzel Decorative',Georgia,serif;text-align:center;margin:6px 0 0;color:var(--gold);letter-spacing:3px}
+h2{text-align:center;color:var(--red);font-size:22px;letter-spacing:4px;text-transform:uppercase;margin:4px 0 12px}
+h2::before{content:'❦ '}h2::after{content:' ❦'}
+h3{color:var(--gold);font-size:16px;margin:14px 0 4px;letter-spacing:1px;border-bottom:1px solid var(--line)}
+.logo{display:block;width:130px;height:130px;margin:6px auto}
+.scr{background:linear-gradient(var(--pa),var(--pb));border:2px solid var(--gold);outline:1px solid var(--line);outline-offset:-7px;border-radius:4px;padding:16px;margin:10px 0;box-shadow:0 8px 20px rgba(0,0,0,.35)}
+.pl{padding:12px 14px;margin:8px 0}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.lb{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--gold)}
+button{font:700 14px 'Cinzel',serif;letter-spacing:1px;color:var(--ink);background:var(--pa);border:2px solid var(--gold);border-radius:4px;padding:8px 12px;margin:4px 0;cursor:pointer}
+.go{width:100%;color:#1a100a;background:linear-gradient(#e8c06a,#b98a2c);text-transform:uppercase;padding:13px}
+.btn{width:100%}.bk{padding:6px 12px}.on{background:var(--gold);color:#1a100a}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:8px 0}
+.rg{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.rg button{font-size:15px}
+.emb{font-size:50px;text-align:center}.big{font:700 30px 'Cinzel Decorative',serif;color:var(--red);text-align:center}
+.ctr{text-align:center}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.pc{border:2px solid var(--gold);border-radius:6px;background:var(--pa);text-align:center;padding:8px 2px}
+.pc small{display:block;font-size:10px;letter-spacing:1px;text-transform:uppercase}.pc b{font-size:32px}
+.pc input{width:64px;text-align:center;font-size:26px}
+.sum{background:var(--red);color:#f7e7c3}
+.row{padding:6px 0;border-bottom:1px dotted var(--line)}
+.me{border-color:var(--red);box-shadow:0 0 0 2px var(--red)}
+select,input[type=text],textarea{font:inherit;color:var(--ink);background:var(--pa);border:1px solid var(--line);padding:4px 6px;max-width:100%}
+textarea,.cl{width:100%}.x{width:60px}
+.chips{display:flex;gap:6px}.chips button{flex:1}
+.dot{padding:0 10px;margin:2px;font-size:20px}.yn{padding:4px 12px}
+.chp{display:inline-block;padding:2px 8px;margin:2px;font-size:12px;border:1px solid var(--gold);border-radius:3px;background:var(--pa);cursor:pointer}
+.chp.out{text-decoration:line-through;opacity:.5}.chp.auto{opacity:.3}.chp.lk{background:var(--red);color:#f7e7c3}
+.dock{position:sticky;bottom:0;display:flex;gap:6px;background:var(--bg);border-top:2px solid var(--gold);padding:8px 0 calc(8px + env(safe-area-inset-bottom,0px));margin-top:14px}
+.dock button{flex:1;margin:0;padding:6px 2px}.dock b{display:block;font-size:22px;line-height:1.1}.dock small{font-size:10px;letter-spacing:1px;text-transform:uppercase}
+.wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:16px}td,th{border-bottom:1px solid var(--line);padding:3px;text-align:center}
+.sm{font-size:16px;opacity:.85}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 100 100"><defs><clipPath id="cl"><rect width="50" height="100"/></clipPath><clipPath id="cr"><rect x="50" width="50" height="100"/></clipPath></defs><circle cx="50" cy="50" r="46" fill="none" stroke="var(--gold)" stroke-width="3"/><g clip-path="url(#cl)"><path d="M16 70L19 34L33 50L50 26V74H16Z" fill="var(--gold)"/><circle cx="19" cy="31" r="3.5" fill="var(--gold)"/><circle cx="50" cy="23" r="3.5" fill="var(--gold)"/></g><g clip-path="url(#cr)"><path d="M50 74V38L60 46L72 26L86 48L82 74Z" fill="var(--red)" stroke="var(--gold)" stroke-width="2"/><circle cx="72" cy="22" r="4" fill="var(--gold)"/><circle cx="88" cy="46" r="3.5" fill="var(--gold)"/><circle cx="64" cy="58" r="2.4" fill="var(--gold)"/><path d="M56 66Q69 76 80 64" stroke="var(--gold)" fill="none" stroke-width="2.4"/></g><path d="M50 22V78" stroke="var(--gold)" stroke-width="1.5"/></symbol></svg>
+<svg class="wm"><use href="#lg"/></svg>
+<div id="app"></div>
+<script>
+const $=s=>document.querySelector(s);
+const R={K:['King','k','👑'],Q:['Queen','k','⚜'],G:['Guard','k','☪'],SK:['Kingdom Spy','k','🗝'],J:['Joker','j','🃏'],SJ:['Joker Spy','j','🎭'],C:['Citizen','k','⚒']};
+const KV=[13,10,7,4,1],JV=[1,4,7,10,13],SJV=[11,0,11,0,11],SKV=[0,11,0,11,0];
+const QS=['Is the sum of your cards greater than or smaller than X?','Is the sum equal to X? Or does your play card equal X, or fall between X and Y?','Is your basic card even or odd? Or prime or composite?','Is your basic card red or black? Or which suit?','Is your basic card from the royal category (King / Queen)?'];
+const QT=[['gt','Sum greater than X',1],['lt','Sum smaller than X',1],['eq','Sum equals X',1],['even','Basic card even',0],['odd','Basic card odd',0],['prime','Basic card prime',0],['comp','Basic card composite',0],['roy','Basic card is King/Queen',0]];
+const AB=[['atk','Attack a player',['K','J','Q'],{K:2,J:2,Q:1},1],['dis','Disable a player',['K','J'],{K:1,J:3},0],['jpar','Parry an attack',['J'],{J:1},0],['qs','Parry a disable on myself',['Q'],{Q:1},0],['qk','Parry a disable on the King',['Q'],{Q:1},0],['gs','Protect myself from disabling',['G'],{G:1},0],['gk','Protect the King from attack',['G'],{G:99},0],['rev','Reveal all play cards',['SK','SJ'],{SK:1,SJ:1},1],['leak','Leak information to my leader',['SK','SJ'],{SK:1,SJ:1},0],['cd','Defect to the Joker team',['C'],{C:1},0],['ca','Citizen attack',['C'],{C:1},1]];
+const RULES=['A valid Disable cancels a valid Attack.','A valid Disable cancels a valid Disable.','A valid Parry cancels a valid Disable.','Protection cancels Attack.','Attack cancels Attack.','A successful attack on the enemy leader wins the game.'];
+const esc=t=>String(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+const bv=(x,r)=>({K:KV[r],Q:12,G:1,J:JV[r],SJ:SJV[r],SK:SKV[r]}[x]);
+const vals=(x,r)=>x=='C'?[2,3,4,5,6,7,8,9,10]:[bv(x,r)];
+const rng=(x,r)=>x=='C'?[3,20]:[bv(x,r)+1,bv(x,r)+10];
+const PR=[2,3,5,7,11,13],CP=[4,6,8,9,10,12];
+const blank=()=>({seat:0,role:'K',cb:'',p:[0,1,2,3,4,5,6].map(()=>({out:{},a:{},n:{},lock:''})),play:{},used:{},t:{},sec:''});
+let S=null,ui={tab:'me',rd:0,setup:1,seat:0,role:'K'};
+try{S=JSON.parse(localStorage.getItem('hk')||'null')}catch(e){}
+if(S){ui.setup=0;ui.seat=S.seat;ui.role=S.role}
+const save=()=>{try{localStorage.setItem('hk',JSON.stringify(S))}catch(e){}};
+
+function ok(x,r,a){
+ if(!a||!a.t||a.y==null||a.y===undefined)return 1;
+ const [lo,hi]=rng(x,r),X=+a.x,y=a.y==1,sum=/^(gt|lt|eq)$/.test(a.t);
+ if(sum&&(a.x===''||a.x==null||isNaN(X)))return 1;
+ if(a.t=='gt')return y?hi>X:lo<=X;
+ if(a.t=='lt')return y?lo<X:hi>=X;
+ if(a.t=='eq')return y?(X>=lo&&X<=hi):!(lo==hi&&lo==X);
+ if(a.t=='roy')return y==(x=='K'||x=='Q');
+ const f={even:v=>v%2==0,odd:v=>v%2==1,prime:v=>PR.includes(v),comp:v=>CP.includes(v)}[a.t];
+ return vals(x,r).some(v=>f(v)==y);
+}
+function cand(i){
+ const P=S.p[i];if(P.lock)return [P.lock];
+ const lk=S.p.map(q=>q.lock).filter(Boolean);
+ return Object.keys(R).filter(x=>!P.out[x]&&!lk.includes(x)&&[0,1,2,3,4].every(r=>ok(x,r,P.a[r])));
+}
+function begin(){
+ if(!S)S=blank();
+ S.p[S.seat].lock='';S.seat=ui.seat;S.role=ui.role;S.p[S.seat].lock=S.role;
+ ui.setup=0;ui.tab='me';save();render();
+}
+function wipe(){S=null;try{localStorage.removeItem('hk')}catch(e){}ui.setup=1;render()}
+function setA(i,k,v){const a=S.p[i].a[ui.rd]=S.p[i].a[ui.rd]||{};a[k]=k=='y'?(a.y===v?null:v):v;save();render()}
+function cyc(i,x){const P=S.p[i];if(P.lock==x)P.lock='';else if(P.out[x]){delete P.out[x];P.lock=x}else P.out[x]=1;save();render()}
+const rchips=()=>`<div class="chips">${[0,1,2,3,4].map(n=>`<button class="${n==ui.rd?'on':''}" onclick="ui.rd=${n};render()">R${n+1}</button>`).join('')}</div>`;
+
+function meV(){
+ const x=S.role,r=ui.rd,pl=S.play[r]||{},b=x=='C'?(+S.cb||'?'):bv(x,r);
+ let h=`${rchips()}<div class="emb">${R[x][2]}</div><div class="big">${R[x][0]}</div><p class="ctr">Seat ${S.seat+1} · ${R[x][1]=='j'?'Expose the King and topple him.':'Protect the King from exposure.'}</p>
+ <div class="cards"><div class="pc"><small>Basic · R${r+1}</small><b>${b}</b></div><div class="pc"><small>Play card</small><input type="text" inputmode="numeric" value="${esc(pl.v)}" onchange="S.play[${r}]={v:this.value};save();render()"></div><div class="pc sum"><small>Sum</small><b>${(+b&&+pl.v)?+b+ +pl.v:'—'}</b></div></div>`;
+ if(x=='C')h+=`<p class="sm">My fixed basic card (2–10): <input class="x" type="text" inputmode="numeric" value="${esc(S.cb)}" onchange="S.cb=this.value;save();render()"></p>`;
+ h+='<h3>My abilities (tap to mark used)</h3>'+AB.filter(a=>a[2].includes(x)).map(([id,l,rs,mx,mr])=>{const m=mx[x],u=S.used[id]||0;return `<div class="row">${l}${mr?' <span class="sm">· from R2</span>':''}<br>${m>9?'<span class="sm">unlimited</span>':[...Array(m)].map((_,i)=>`<button class="dot" onclick="S.used['${id}']=${i==u-1?i:i+1};save();render()">${i<u?'●':'○'}</button>`).join('')}</div>`}).join('');
+ if(x=='SK'||x=='SJ')h+=`<h3>Secret cards</h3><input class="cl" type="text" placeholder="e.g. 7♠ 7♦ 7♣" value="${esc(S.sec)}" onchange="S.sec=this.value;save()">`;
+ return h;
+}
+function notesV(){
+ const r=ui.rd;
+ let h=`${rchips()}<h3>Round ${r+1} question</h3><p class="sm">${QS[r]}</p><textarea rows="3" placeholder="My reasoning this round…" onchange="S.t[${r}]=this.value;save()">${esc(S.t[r])}</textarea>`;
+ [0,1,2,3,4,5,6].forEach(i=>{
+  if(i==S.seat)return;
+  const P=S.p[i],a=P.a[r]||{},c=cand(i),sum=/^(gt|lt|eq)$/.test(a.t||'');
+  h+=`<div class="scr pl"><b>Player ${i+1}</b> <span class="sm">· ${c.length?c.length+' possible':'⚠ no role fits, check entries'}</span><br>
+  <select onchange="setA(${i},'t',this.value)"><option value="">— their answer type —</option>${QT.map(q=>`<option value="${q[0]}"${a.t==q[0]?' selected':''}>${q[1]}</option>`).join('')}</select>
+  ${sum?`<input class="x" type="text" inputmode="numeric" placeholder="X" value="${esc(a.x)}" onchange="setA(${i},'x',this.value)">`:''}
+  <button class="yn${a.y===1?' on':''}" onclick="setA(${i},'y',1)">Yes</button><button class="yn${a.y===0?' on':''}" onclick="setA(${i},'y',0)">No</button>
+  <input class="cl" type="text" placeholder="Clue / what they said" value="${esc(P.n[r])}" onchange="S.p[${i}].n[${r}]=this.value;save()">
+  <div>${Object.keys(R).map(x=>`<span class="chp${P.lock==x?' lk':P.out[x]?' out':c.includes(x)?'':' auto'}" onclick="cyc(${i},'${x}')">${P.lock==x?'✓ ':''}${R[x][0]}</span>`).join('')}</div></div>`;
+ });
+ return h+'<p class="sm">Tap a role: once to cross it out, twice to mark it certain (✓), three times to clear. Faded roles are ruled out by the answers.</p>';
+}
+function boardV(){
+ const cs=[0,1,2,3,4,5,6].map(cand);
+ return '<h2>Board</h2><p class="sm">Who can still hold each role.</p>'+Object.keys(R).map(x=>{
+  const ps=[0,1,2,3,4,5,6].filter(i=>cs[i].includes(x));
+  return `<div class="row${x==S.role?' me':''}">${R[x][2]} <b>${R[x][0]}</b>${x==S.role?' (you)':''}: ${ps.length?ps.map(i=>'P'+(i+1)).join(', ')+(ps.length==1?' ★':''):'<span class="sm">nobody fits</span>'}</div>`}).join('');
+}
+function refV(){
+ let h='<h2>Abilities</h2>';
+ Object.keys(R).forEach(x=>{h+=`<div class="scr${x==S.role?' me':''}" style="padding:10px;margin:8px 0"><b>${R[x][2]} ${R[x][0]}</b> <span class="sm">${R[x][1]=='j'?'(Joker side)':'(Kingdom side)'}${x==S.role?' · YOU':''}</span>`+AB.filter(a=>a[2].includes(x)).map(a=>`<div class="row">${a[1]} <b>×${a[3][x]>9?'∞':a[3][x]}</b>${a[4]?' <span class="sm">· from round 2</span>':''}</div>`).join('')+'</div>'});
+ h+=`<h3>Clash rules</h3>${RULES.map(t=>`<div class="row sm">${t}</div>`).join('')}<h3>Basic card by round</h3><div class="wrap"><table><tr><th></th>${[1,2,3,4,5].map(n=>`<th>${n}</th>`).join('')}</tr>${Object.keys(R).map(x=>`<tr><td>${R[x][0]}</td>${[0,1,2,3,4].map(r=>`<td>${x=='C'?'2–10':bv(x,r)}</td>`).join('')}</tr>`).join('')}</table></div><p class="sm">Sum = basic card + play card (1 to 10).</p>`;
+ return h;
+}
+function render(){
+ const A=$('#app');
+ if(ui.setup||!S){
+  A.innerHTML=`<svg class="logo"><use href="#lg"/></svg><h1>HIDDEN KING</h1><h2>Player Companion</h2>
+  <div class="scr"><p class="sm" style="margin-top:0">Your private notebook and deduction helper. It works on its own and never talks to the game master's device.</p><h3>Your seat</h3><div class="grid">${[0,1,2,3,4,5,6].map(i=>`<button class="${i==ui.seat?'on':''}" onclick="ui.seat=${i};render()">${i+1}</button>`).join('')}</div><h3>Your role</h3><div class="rg">${Object.keys(R).map(x=>`<button class="${x==ui.role?'on':''}" onclick="ui.role='${x}';render()">${R[x][2]} ${R[x][0]}</button>`).join('')}</div></div>
+  <button class="go" onclick="begin()">${S?'Save and continue':'Enter the game'}</button>${S?'<button class="btn" onclick="wipe()">New game (clear notes)</button>':''}`;return;
+ }
+ const T=[['me','👤','Me'],['notes','📜','Notes'],['board','🎯','Board'],['ref','⚔','Abilities']];
+ A.innerHTML=`<div class="top"><button class="bk" onclick="ui.setup=1;render()">‹ Setup</button><span class="lb">Seat ${S.seat+1} · ${R[S.role][0]}</span></div><div class="scr">${{me:meV,notes:notesV,board:boardV,ref:refV}[ui.tab]()}</div><nav class="dock">${T.map(([k,i,l])=>`<button class="${k==ui.tab?'on':''}" onclick="ui.tab='${k}';render()"><b>${i}</b><small>${l}</small></button>`).join('')}</nav>`;
+}
+render();
+</script></body></html>
